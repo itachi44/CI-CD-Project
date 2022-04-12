@@ -1,0 +1,15 @@
+{
+  "version": 0,
+  "enabled": true,
+  "deleted": false,
+  "id": "aec05f81-496c-4f8a-8b7e-3d6bf742594f",
+  "created_date": "2022-03-26T02:20:09.179Z",
+  "last_modified_date": "2022-03-26T02:20:09.179Z",
+
+  "name": "Goor Goor Lu",
+  "address": "Agora",
+  "phone": "339511234",
+  "email": "ggl@ept.sn",
+  "longitude": 0.037535965,
+  "latitude": 0.7408897
+}
