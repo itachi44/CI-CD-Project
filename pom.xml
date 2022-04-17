@@ -14,6 +14,8 @@
     <name>tracking</name>
     <description>Projet de tracking d'evenements</description>
 
+
+
     <properties>
         <java.version>1.8</java.version>
 
@@ -30,6 +32,19 @@
         <sonar.scm.proider>git</sonar.scm.proider>
     </properties>
 
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <name>maven-releases</name>
+            <url>http://localhost:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus</id>
+            <name>maven-snapshots</name>
+            <url>http://localhost:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
     <dependencies>
 
         <!--JACOCO-->
