@@ -13,6 +13,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>tracking</name>
     <description>Projet de tracking d'evenements</description>
+    <packaging>war</packaging>
+
 
 
 
@@ -189,6 +191,14 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
             <plugin>
