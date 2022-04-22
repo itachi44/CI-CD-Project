@@ -8,7 +8,7 @@ import sn.ept.git.seminaire.cicd.mappers.SocieteMapper;
 import sn.ept.git.seminaire.cicd.mappers.vm.SocieteVMMapper;
 import sn.ept.git.seminaire.cicd.models.Societe;
 import sn.ept.git.seminaire.cicd.repositories.SocieteRepository;
-import sn.ept.git.seminaire.cicd.resources.AgentResource;
+//import sn.ept.git.seminaire.cicd.resources.AgentResource;
 import sn.ept.git.seminaire.cicd.services.ISocieteService;
 import sn.ept.git.seminaire.cicd.utils.ExceptionUtils;
 import org.springframework.data.domain.Page;
@@ -28,7 +28,7 @@ public class SocieteServiceImpl implements ISocieteService {
     private final SocieteRepository repository;
     private final SocieteMapper mapper;
     private final SocieteVMMapper vmMapper;
-    private final AgentResource agent = null;
+    //private final AgentResource agent = null;
 
     public SocieteServiceImpl(SocieteRepository repository, SocieteMapper mapper, SocieteVMMapper vmMapper) {
         this.repository = repository;
