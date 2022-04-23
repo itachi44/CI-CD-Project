@@ -17,17 +17,17 @@ pipeline {
                 sh "mvn --version"
             }
         }
-        stage('Clone code from VCS') {
-            steps {
-                script {
-                git branch: 'main',
-                credentialsId: 'itachi44',
-                url: 'git@github.com:itachi44/CI-CD-Project.git'
+       // stage('Clone code from VCS') {
+         //   steps {
+          //      script {
+          //      git branch: 'main',
+           //     credentialsId: 'itachi44',
+            //    url: 'git@github.com:itachi44/CI-CD-Project.git'
 
-                sh "git branch"
+             //   sh "git branch"
 
-                }
-            }
+             //   }
+          //  }
         }
 
         stage("Run tests") {
