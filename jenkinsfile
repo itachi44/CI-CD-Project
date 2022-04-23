@@ -2,6 +2,9 @@ pipeline {
     agent {
         label 'ubuntuVM'
     }
+    environment {
+        EMAIL_TO = 'ngfarimata@ept.sn, dcheikhahmadou@ept.sn, sadjiabdoulaye@ept.sn'
+    }
 
     tools {
         // Install the Maven version configured as "M3" and add it to the path.
@@ -16,12 +19,42 @@ pipeline {
         }
         stage('Clone code from VCS') {
             steps {
-                git branch: 'main',
-                credentialsId: 'itachi44',
-                url: 'git@github.com:itachi44/CI-CD-Project.git'
-                sh "ls -lat"
+                script {
+                git 'git@github.com:itachi44/CI-CD-Project.git'
+                sh "git branch"
+
+                }
+            }
+        }
+
+        stage("Run tests") {
+            steps {
+                script {
+                    sh "mvn test"
+                }
             }
         }
     }
-}
+    post {
+        always {
+            emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}',
+            recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+            to: "${EMAIL_TO}",
+            subject: '${CHANGES}'
+        }
+        success {
+             echo 'This will run only if successful'
+         }
+        failure {
+             mail bcc: '', body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "foo@foomail.com";
+         }
+        unstable {
+             echo 'This will run only if the run was marked as unstable'
+         }
+        changed {
+             echo 'This will run only if the state of the Pipeline has changed'
+             echo 'For example, if the Pipeline was previously failing but is now successful'
 
+         }
+    }
+}
