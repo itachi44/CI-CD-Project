@@ -4,10 +4,15 @@ pipeline {
     }
     environment {
         EMAIL_TO = 'ngfarimata@ept.sn, dcheikhahmadou@ept.sn, sadjiabdoulaye@ept.sn'
+        NEXUS_VERSION = "nexus3"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_URL = "44.201.200.73:8081"
+        NEXUS_SNAPSHOT_REPOSITORY = "maven-snapshots"
+        NEXUS_RELEASE_REPOSITORY = "maven-releases"
+        NEXUS_CREDENTIAL_ID = "nexus-user-credentials"
     }
 
     tools {
-        // Install the Maven version configured as "M3" and add it to the path.
         maven "maven 3.8.5"
     }
 
@@ -45,6 +50,22 @@ pipeline {
                 }
             }
         }
+
+        stage('Sonarqube') {
+            environment {
+                scannerHome = tool 'sonar1'
+            }
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+
     }
     post {
         always {
