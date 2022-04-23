@@ -8,7 +8,6 @@ import sn.ept.git.seminaire.cicd.mappers.SocieteMapper;
 import sn.ept.git.seminaire.cicd.mappers.vm.SocieteVMMapper;
 import sn.ept.git.seminaire.cicd.models.Societe;
 import sn.ept.git.seminaire.cicd.repositories.SocieteRepository;
-//import sn.ept.git.seminaire.cicd.resources.AgentResource;
 import sn.ept.git.seminaire.cicd.services.ISocieteService;
 import sn.ept.git.seminaire.cicd.utils.ExceptionUtils;
 import org.springframework.data.domain.Page;
@@ -28,7 +27,6 @@ public class SocieteServiceImpl implements ISocieteService {
     private final SocieteRepository repository;
     private final SocieteMapper mapper;
     private final SocieteVMMapper vmMapper;
-    //private final AgentResource agent = null;
 
     public SocieteServiceImpl(SocieteRepository repository, SocieteMapper mapper, SocieteVMMapper vmMapper) {
         this.repository = repository;
@@ -56,9 +54,12 @@ public class SocieteServiceImpl implements ISocieteService {
     public void delete(UUID uuid) {
         final Optional<Societe> optional = repository.findById(uuid);
         ExceptionUtils.presentOrThrow(optional, ItemNotFoundException.SOCIETE_BY_ID, uuid.toString());
-        final Societe societe = optional.get();
-        societe.setDeleted(true);
-        repository.saveAndFlush(societe);
+
+        if(optional.isPresent()) {
+            final Societe societe = optional.get();
+            societe.setDeleted(true);
+            repository.saveAndFlush(societe);
+        }
     }
 
     @Override
@@ -98,8 +99,10 @@ public class SocieteServiceImpl implements ISocieteService {
 
         optional = repository.findById(uuid);
         ExceptionUtils.presentOrThrow(optional, ItemNotFoundException.SOCIETE_BY_ID, vm.getId().toString());
-
-        final Societe item = optional.get();
+        Societe item= new Societe();
+        if(optional.isPresent()){
+            item = optional.get();
+        }
         item.setName(vm.getName());
         item.setPhone(vm.getPhone());
         item.setEmail(vm.getEmail());

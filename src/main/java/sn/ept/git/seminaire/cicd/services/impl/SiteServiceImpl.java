@@ -49,7 +49,9 @@ public class SiteServiceImpl implements ISiteService {
         ExceptionUtils.absentOrThrow(optional, ItemExistsException.NAME_EXISTS, vm.getName());
 
         Site entity =  vmMapper.asEntity(vm);
-        entity.setSociete(societe.get());
+        if(societe.isPresent()) {
+            entity.setSociete(societe.get());
+        }
 
         return mapper.asDTO(repository.saveAndFlush(entity));
     }
@@ -60,9 +62,11 @@ public class SiteServiceImpl implements ISiteService {
     public void delete(UUID uuid) {
         final Optional<Site> optional = repository.findById(uuid);
         ExceptionUtils.presentOrThrow(optional, ItemNotFoundException.SITE_BY_ID, uuid.toString());
-        final Site site = optional.get();
-        site.setDeleted(true);
-        repository.saveAndFlush(site);
+        if(optional.isPresent()) {
+            final Site site = optional.get();
+            site.setDeleted(true);
+            repository.saveAndFlush(site);
+        }
     }
 
     @Override
@@ -101,8 +105,11 @@ public class SiteServiceImpl implements ISiteService {
         optional = repository.findById(uuid);
         ExceptionUtils.presentOrThrow(optional, ItemNotFoundException.SITE_BY_ID, vm.getId().toString());
 
-        final Site item = optional.get();
-        item.setName(vm.getName());
+         Site item = new Site();
+        if(optional.isPresent()) {
+            item = optional.get();
+            item.setName(vm.getName());
+        }
         //more changes if required
         return mapper.asDTO(repository.saveAndFlush(item));
     }
