@@ -9,7 +9,9 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ExerciceDTO extends ExerciceBaseDTO {
 
-
+    private SocieteDTO societe;
 }
