@@ -13,6 +13,5 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class ExerciceDTO extends ExerciceBaseDTO {
 
-    private SocieteDTO societe;
-   // private Set<Intervention> interventions;
+
 }
