@@ -1,5 +1,6 @@
 package sn.ept.git.seminaire.cicd.data;
 
+import sn.ept.git.seminaire.cicd.dto.SocieteDTO;
 import sn.ept.git.seminaire.cicd.enums.StatusExercice;
 import sn.ept.git.seminaire.cicd.utils.SizeMapping;
 import org.apache.commons.lang.RandomStringUtils;
@@ -29,6 +30,8 @@ public class TestData {
         public static final Instant start = Instant.now();
         public static final Instant end = Instant.now();
         public static final StatusExercice status = StatusExercice.OPEN;
+        public static final SocieteDTO societe= SocieteDTOTestData.defaultDTO();
+        public static final UUID idSociete= societe.getId();
     }
 
 

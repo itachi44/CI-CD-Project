@@ -40,8 +40,8 @@ class SiteVMMapperTest extends MapperBaseTest{
         vm = mapper.asDTO(entity);
         assertThat(vm)
                 .isNotNull()
-                .hasNoNullFieldsOrProperties()
                 .usingRecursiveComparison()
+                .ignoringActualNullFields()
                 .isEqualTo(entity);
     }
 }

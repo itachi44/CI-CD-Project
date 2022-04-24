@@ -18,6 +18,7 @@ public final class SiteVMTestData extends TestData{
                 .email(Default.email)
                 .longitude(Default.longitude)
                 .latitude(Default.latitude)
+                .idSociete(Default.idSociete)
                 .build();
     }
 

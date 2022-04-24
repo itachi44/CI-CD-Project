@@ -3,6 +3,7 @@ package sn.ept.git.seminaire.cicd.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Where;
 import sn.ept.git.seminaire.cicd.enums.StatusExercice;
 import sn.ept.git.seminaire.cicd.utils.SizeMapping;
@@ -46,7 +47,7 @@ public class Exercice extends BaseEntity {
 
     @Where(clause = BaseEntity.CLAUSE)
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "id_societe")
     private Societe societe;
 

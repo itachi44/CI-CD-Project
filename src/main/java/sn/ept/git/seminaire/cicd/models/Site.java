@@ -42,7 +42,7 @@ public class Site extends BaseEntity {
 
     @Where(clause = CLAUSE)
     @NotNull
-    @ManyToOne()
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "id_societe")
     private Societe societe;
 

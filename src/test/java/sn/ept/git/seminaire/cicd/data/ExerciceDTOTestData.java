@@ -18,6 +18,7 @@ public final class ExerciceDTOTestData extends TestData{
                 .start(Default.start)
                 .end(Default.end)
                 .status(Default.status)
+                .societe(Default.societe)
                 .build();
     }
 

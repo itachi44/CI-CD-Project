@@ -9,9 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import sn.ept.git.seminaire.cicd.data.ExerciceVMTestData;
+import sn.ept.git.seminaire.cicd.data.SocieteVMTestData;
 import sn.ept.git.seminaire.cicd.data.TestData;
 import sn.ept.git.seminaire.cicd.dto.ExerciceDTO;
 import sn.ept.git.seminaire.cicd.dto.vm.ExerciceVM;
+import sn.ept.git.seminaire.cicd.dto.vm.SocieteVM;
 import sn.ept.git.seminaire.cicd.services.IExerciceService;
 import sn.ept.git.seminaire.cicd.utils.SizeMapping;
 import sn.ept.git.seminaire.cicd.utils.TestUtil;
@@ -62,7 +64,9 @@ class ExerciceResourceTest extends BasicResourceTest {
                 .andExpect(jsonPath("$.content.[0].name", is(dto.getName())))
                 .andExpect(jsonPath("$.content.[0].status", is(dto.getStatus())))
                 .andExpect(jsonPath("$.content.[0].start", is(dto.getStart())))
-                .andExpect(jsonPath("$.content.[0].end", is(dto.getEnd())));
+                .andExpect(jsonPath("$.content.[0].end", is(dto.getEnd())))
+                .andExpect(jsonPath("$.content.[0].end", is(dto.getSociete())));
+
 
     }
 

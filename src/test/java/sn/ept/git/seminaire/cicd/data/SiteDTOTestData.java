@@ -18,6 +18,7 @@ public final class SiteDTOTestData extends TestData{
                 .email(Default.email)
                 .longitude(Default.longitude)
                 .latitude(Default.latitude)
+                .societe(Default.societe)
                 .build();
     }
 

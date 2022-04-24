@@ -28,7 +28,8 @@ class SiteDTOMapperTest extends MapperBaseTest{
         assertThat(entity)
                 .isNotNull()
                 .usingRecursiveComparison()
-                .ignoringFields("society", "agents", "interventions")
+                .ignoringActualNullFields()
+                .ignoringFields("agents", "interventions")
                 .isEqualTo(dto);
     }
 

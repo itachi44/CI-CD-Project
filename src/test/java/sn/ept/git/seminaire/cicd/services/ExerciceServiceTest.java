@@ -6,14 +6,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import sn.ept.git.seminaire.cicd.data.ExerciceVMTestData;
+import sn.ept.git.seminaire.cicd.data.SocieteVMTestData;
 import sn.ept.git.seminaire.cicd.dto.ExerciceDTO;
+import sn.ept.git.seminaire.cicd.dto.SocieteDTO;
 import sn.ept.git.seminaire.cicd.dto.vm.ExerciceVM;
+import sn.ept.git.seminaire.cicd.dto.vm.SocieteVM;
 import sn.ept.git.seminaire.cicd.exceptions.ItemExistsException;
 import sn.ept.git.seminaire.cicd.exceptions.ItemNotFoundException;
 import sn.ept.git.seminaire.cicd.mappers.ExerciceMapper;
 import sn.ept.git.seminaire.cicd.mappers.vm.ExerciceVMMapper;
 import sn.ept.git.seminaire.cicd.models.Exercice;
 import sn.ept.git.seminaire.cicd.repositories.ExerciceRepository;
+import sn.ept.git.seminaire.cicd.repositories.SocieteRepository;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -30,16 +34,20 @@ class ExerciceServiceTest extends ServiceBaseTest{
     protected ExerciceVMMapper vmMapper;
     @Autowired
     ExerciceRepository exerciceRepository;
+
     @Autowired
     IExerciceService service;
+    ISocieteService societe;
     Optional<Exercice> exercice;
     static ExerciceVM vm ;
+    static SocieteVM so;
     ExerciceDTO dto;
 
     @BeforeAll
     static void beforeAll(){
         log.info(" before all");
         vm = ExerciceVMTestData.defaultVM();
+        so = SocieteVMTestData.defaultVM();
     }
 
     @BeforeEach
@@ -49,7 +57,9 @@ class ExerciceServiceTest extends ServiceBaseTest{
 
     @Test
     void save_shouldSaveExercice() {
-        dto =service.save(vm);
+        SocieteDTO save;
+        save = societe.save(so);
+        dto = service.save(vm);
         assertThat(dto)
                 .isNotNull()
                 .hasNoNullFieldsOrProperties();
@@ -57,6 +67,7 @@ class ExerciceServiceTest extends ServiceBaseTest{
 
     @Test
     void save_withSameName_shouldThrowException() {
+
         dto =service.save(vm);
         assertThrows(
                 ItemExistsException.class,

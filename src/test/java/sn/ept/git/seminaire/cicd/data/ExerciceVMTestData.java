@@ -18,8 +18,10 @@ public final class ExerciceVMTestData extends TestData {
                 .start(Default.start)
                 .end(Default.end)
                 .status(Default.status)
+                .idSociete(Default.idSociete)
                 .build();
     }
+
 
     public static ExerciceVM updatedVM(){
         return ExerciceVM
