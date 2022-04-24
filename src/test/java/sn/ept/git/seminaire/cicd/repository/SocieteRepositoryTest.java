@@ -1,170 +1,33 @@
-package sn.ept.git.seminaire.cicd.repository;
+package sn.ept.git.seminaire.cicd.repositories;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import sn.ept.git.seminaire.cicd.data.SocieteDTOTestData;
-import sn.ept.git.seminaire.cicd.dto.SocieteDTO;
-import sn.ept.git.seminaire.cicd.mappers.SocieteMapper;
-import sn.ept.git.seminaire.cicd.models.Societe;
-import sn.ept.git.seminaire.cicd.repositories.SocieteRepository;
+import sn.ept.git.seminaire.cicd.models.Site;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
+@Repository
+public interface SiteRepository extends JpaRepository<Site, UUID> {
 
-class SocieteRepositoryTest extends RepositoryBaseTest {
+    @Query("select s from Site s where s.name=:name")
+    Optional<Site> findByName(@Param("name") String name);
 
-    @Autowired
-    private SocieteMapper mapper;
-    @Autowired
-    private SocieteRepository repository;
+    @Query("select s from Site  s where s.phone=:phone")
+    Optional<Site> findByPhone(@Param("phone") String phone);
 
-    static SocieteDTO dto;
-    Societe entity;
-    Optional<Societe> optionalSociete;
-
-    @BeforeAll
-    static void beforeAll(){
-        dto = SocieteDTOTestData.defaultDTO();
-    }
-
-    @BeforeEach
-    void setUp() {
-        entity = mapper.asEntity(dto);
-        repository.deleteAll();
-        entity = repository.saveAndFlush(entity);
-    }
-
-    @Test
-    void FindByName_thenResult() {
-        optionalSociete = repository.findByName(entity.getName());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isPresent()
-                .get()
-                .usingRecursiveComparison()
-                .isEqualTo(entity);
-    }
-
-    @Test
-    void FindByBadName_thenNotFound() {
-        optionalSociete = repository.findByName(UUID.randomUUID().toString());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isNotPresent();
-    }
-
-    @Test
-    void FindDeleted_thenNotFound() {
-        entity.setDeleted(true);
-        entity = repository.saveAndFlush(entity);
-        optionalSociete = repository.findByName(entity.getName());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isNotPresent();
-    }
-
-    @Test
-    void FindByEmail_thenResult() {
-        optionalSociete = repository.findByEmail(entity.getEmail());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isPresent()
-                .get()
-                .usingRecursiveComparison()
-                .isEqualTo(entity);
-    }
-
-    @Test
-    void FindByBadEmail_thenNotFound() {
-        optionalSociete = repository.findByEmail(UUID.randomUUID().toString());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isNotPresent();
-    }
+    @Query("select s from Site  s where s.email=:email")
+    Optional<Site> findByEmail(@Param("email") String email);
 
 
-    @Test
-    void FindByPhone_thenResult() {
-        optionalSociete = repository.findByPhone(entity.getPhone());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isPresent()
-                .get()
-                .usingRecursiveComparison()
-                .isEqualTo(entity);
-    }
+    @Query("select s from Site s where s.name=:name and s.id<>:id")
+    Optional<Site> findByNameWithIdDifferent(@Param("name") String name, @Param("id") UUID id);
 
-    @Test
-    void FindByBadPhone_thenNotFound() {
-        optionalSociete = repository.findByPhone(UUID.randomUUID().toString());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isNotPresent();
-    }
+    @Query("select s from Site  s where s.phone=:phone and s.id<>:id")
+    Optional<Site> findByPhoneWithIdNotEqual(@Param("phone") String phone, @Param("id") UUID uuid);
 
-
-    @Test
-    void findByNameWithIdNotEqual_thenResult() {
-        optionalSociete = repository.findByNameWithIdNotEqual(entity.getName(),UUID.randomUUID());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isPresent()
-                .get()
-                .usingRecursiveComparison()
-                .isEqualTo(entity);
-    }
-
-    @Test
-    void findByNameWithIdNotEqual_withSameId_shouldReturnNoResult() {
-        optionalSociete = repository.findByNameWithIdNotEqual(entity.getName(),entity.getId());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isNotPresent();
-    }
-
-
-
-
-    @Test
-    void findByPhoneWithIdNotEqual_thenResult() {
-        optionalSociete = repository.findByPhoneWithIdNotEqual(entity.getPhone(),UUID.randomUUID());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isPresent()
-                .get()
-                .usingRecursiveComparison()
-                .isEqualTo(entity);
-    }
-
-    @Test
-    void findByPhoneWithIdNotEqual_withSameId_shouldReturnNoResult() {
-        optionalSociete = repository.findByPhoneWithIdNotEqual(entity.getPhone(),entity.getId());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isNotPresent();
-    }
-
-
-    @Test
-    void findByEmailWithIdNotEqual_thenResult() {
-        optionalSociete = repository.findByEmailWithIdNotEqual(entity.getEmail(),UUID.randomUUID());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isPresent()
-                .get()
-                .usingRecursiveComparison()
-                .isEqualTo(entity);
-    }
-
-    @Test
-    void findByEmailWithIdNotEqual_withSameId_shouldReturnNoResult() {
-        optionalSociete = repository.findByEmailWithIdNotEqual(entity.getEmail(),entity.getId());
-        assertThat(optionalSociete)
-                .isNotNull()
-                .isNotPresent();
-    }
-
+    @Query("select s from Site  s where s.email=:email and s.id<>:id")
+    Optional<Site> findByEmailWithIdNotEqual(@Param("email") String email, @Param("id") UUID uuid);
 }

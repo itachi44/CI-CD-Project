@@ -8,6 +8,7 @@ import sn.ept.git.seminaire.cicd.mappers.SocieteMapper;
 import sn.ept.git.seminaire.cicd.mappers.vm.SocieteVMMapper;
 import sn.ept.git.seminaire.cicd.models.Societe;
 import sn.ept.git.seminaire.cicd.repositories.SocieteRepository;
+//import sn.ept.git.seminaire.cicd.resources.AgentResource;
 import sn.ept.git.seminaire.cicd.services.ISocieteService;
 import sn.ept.git.seminaire.cicd.utils.ExceptionUtils;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ public class SocieteServiceImpl implements ISocieteService {
     private final SocieteRepository repository;
     private final SocieteMapper mapper;
     private final SocieteVMMapper vmMapper;
+    //private final AgentResource agent = null;
 
     public SocieteServiceImpl(SocieteRepository repository, SocieteMapper mapper, SocieteVMMapper vmMapper) {
         this.repository = repository;
@@ -37,7 +39,7 @@ public class SocieteServiceImpl implements ISocieteService {
     @Transactional
     @Override
     public SocieteDTO save(SocieteVM vm) {
-         Optional<Societe> optional = repository.findByName(vm.getName());
+        Optional<Societe> optional = repository.findByName(vm.getName());
         ExceptionUtils.absentOrThrow(optional, ItemExistsException.NAME_EXISTS, vm.getName());
 
         optional = repository.findByPhone(vm.getPhone());
@@ -54,12 +56,12 @@ public class SocieteServiceImpl implements ISocieteService {
     public void delete(UUID uuid) {
         final Optional<Societe> optional = repository.findById(uuid);
         ExceptionUtils.presentOrThrow(optional, ItemNotFoundException.SOCIETE_BY_ID, uuid.toString());
-
-        if(optional.isPresent()) {
-            final Societe societe = optional.get();
+        Societe societe = new Societe();
+        if(optional.isPresent()){
+            societe = optional.get();
             societe.setDeleted(true);
-            repository.saveAndFlush(societe);
         }
+        repository.saveAndFlush(societe);
     }
 
     @Override
@@ -88,7 +90,7 @@ public class SocieteServiceImpl implements ISocieteService {
     @Transactional
     @Override
     public SocieteDTO update(UUID uuid, SocieteVM vm) {
-         Optional<Societe>  optional = repository.findByNameWithIdNotEqual(vm.getName(),uuid);
+        Optional<Societe>  optional = repository.findByNameWithIdNotEqual(vm.getName(),uuid);
         ExceptionUtils.absentOrThrow(optional, ItemExistsException.NAME_EXISTS, vm.getName());
 
         optional = repository.findByPhoneWithIdNotEqual(vm.getPhone(),uuid);
@@ -99,16 +101,17 @@ public class SocieteServiceImpl implements ISocieteService {
 
         optional = repository.findById(uuid);
         ExceptionUtils.presentOrThrow(optional, ItemNotFoundException.SOCIETE_BY_ID, vm.getId().toString());
-        Societe item= new Societe();
+
+        Societe item = new Societe();
         if(optional.isPresent()){
             item = optional.get();
+            item.setName(vm.getName());
+            item.setPhone(vm.getPhone());
+            item.setEmail(vm.getEmail());
+            item.setAddress(vm.getAddress());
+            item.setLongitude(vm.getLongitude());
+            item.setLatitude(vm.getLatitude());
         }
-        item.setName(vm.getName());
-        item.setPhone(vm.getPhone());
-        item.setEmail(vm.getEmail());
-        item.setAddress(vm.getAddress());
-        item.setLongitude(vm.getLongitude());
-        item.setLatitude(vm.getLatitude());
 
         return mapper.asDTO(repository.saveAndFlush(item));
     }

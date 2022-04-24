@@ -49,9 +49,7 @@ public class ExerciceServiceImpl implements IExerciceService {
         ExceptionUtils.absentOrThrow(optional, ItemExistsException.PLAGE_EXERCICE_EXIST, vm.getStart().toString(),vm.getEnd().toString());
 
         Exercice entity =  vmMapper.asEntity(vm);
-        if(societe.isPresent()) {
-            entity.setSociete(societe.get());
-        }
+        entity.setSociete(societe.get());
 
         return mapper.asDTO(repository.saveAndFlush(entity));
     }
@@ -61,11 +59,9 @@ public class ExerciceServiceImpl implements IExerciceService {
     public void delete(UUID uuid) {
         final Optional<Exercice> optional = repository.findById(uuid);
         ExceptionUtils.presentOrThrow(optional, ItemNotFoundException.SITE_BY_ID, uuid.toString());
-        if(optional.isPresent()) {
-            final Exercice site = optional.get();
-            site.setDeleted(true);
-            repository.saveAndFlush(site);
-        }
+        final Exercice site = optional.get();
+        site.setDeleted(true);
+        repository.saveAndFlush(site);
     }
 
     @Override
@@ -104,15 +100,10 @@ public class ExerciceServiceImpl implements IExerciceService {
         optional = repository.findById(uuid);
         ExceptionUtils.presentOrThrow(optional, ItemNotFoundException.EXECICE_BY_ID, vm.getId().toString());
 
-         Exercice item= new Exercice();
-        if(optional.isPresent()) {
-            item = optional.get();
-            item.setName(vm.getName());
-            //more changes if required
-        }
+        final Exercice item = optional.get();
+        item.setName(vm.getName());
+        //more changes if required
         return mapper.asDTO(repository.saveAndFlush(item));
-
-
     }
 
     @Transactional

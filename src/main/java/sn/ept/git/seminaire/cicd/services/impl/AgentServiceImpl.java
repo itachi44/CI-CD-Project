@@ -15,7 +15,7 @@ import sn.ept.git.seminaire.cicd.utils.ExceptionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -47,9 +47,10 @@ public class AgentServiceImpl implements IAgentService {
         optional = repository.findByEmail(vm.getEmail());
         ExceptionUtils.absentOrThrow(optional, ItemExistsException.EMAIL_EXISTS, vm.getEmail());
 
+        //todo not found
         final List<Site> sites = siteRepository.findAllById(vm.getIdsSite());
-         Agent item = vmMapper.asEntity(vm);
-         item.setSites(sites.stream().collect(Collectors.toSet()));
+        Agent item = vmMapper.asEntity(vm);
+        item.setSites(sites.stream().collect(Collectors.toSet()));
         return mapper.asDTO(repository.saveAndFlush(item));
     }
 
@@ -59,12 +60,9 @@ public class AgentServiceImpl implements IAgentService {
     public void delete(UUID uuid) {
         final Optional<Agent> optional = repository.findById(uuid);
         ExceptionUtils.presentOrThrow(optional, ItemNotFoundException.SITE_BY_ID, uuid.toString());
-        if(optional.isPresent()) {
-            final Agent site = optional.get();
-            site.setDeleted(true);
-            repository.saveAndFlush(site);
-        }
-
+        final Agent site = optional.get();
+        site.setDeleted(true);
+        repository.saveAndFlush(site);
     }
 
     @Override
