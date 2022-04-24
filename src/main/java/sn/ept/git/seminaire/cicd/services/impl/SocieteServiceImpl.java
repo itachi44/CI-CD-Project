@@ -39,7 +39,7 @@ public class SocieteServiceImpl implements ISocieteService {
     @Transactional
     @Override
     public SocieteDTO save(SocieteVM vm) {
-        Optional<Societe> optional = repository.findByName(vm.getName());
+         Optional<Societe> optional = repository.findByName(vm.getName());
         ExceptionUtils.absentOrThrow(optional, ItemExistsException.NAME_EXISTS, vm.getName());
 
         optional = repository.findByPhone(vm.getPhone());
@@ -90,7 +90,7 @@ public class SocieteServiceImpl implements ISocieteService {
     @Transactional
     @Override
     public SocieteDTO update(UUID uuid, SocieteVM vm) {
-        Optional<Societe>  optional = repository.findByNameWithIdNotEqual(vm.getName(),uuid);
+         Optional<Societe>  optional = repository.findByNameWithIdNotEqual(vm.getName(),uuid);
         ExceptionUtils.absentOrThrow(optional, ItemExistsException.NAME_EXISTS, vm.getName());
 
         optional = repository.findByPhoneWithIdNotEqual(vm.getPhone(),uuid);

@@ -4,30 +4,31 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import sn.ept.git.seminaire.cicd.data.SocieteDTOTestData;
-import sn.ept.git.seminaire.cicd.dto.SocieteDTO;
-import sn.ept.git.seminaire.cicd.mappers.SocieteMapper;
-import sn.ept.git.seminaire.cicd.models.Societe;
-import sn.ept.git.seminaire.cicd.repositories.SocieteRepository;
+import sn.ept.git.seminaire.cicd.data.SiteDTOTestData;
+import sn.ept.git.seminaire.cicd.dto.SiteDTO;
+import sn.ept.git.seminaire.cicd.mappers.SiteMapper;
+import sn.ept.git.seminaire.cicd.models.Site;
+import sn.ept.git.seminaire.cicd.repositories.SiteRepository;
+
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SocieteRepositoryTest extends RepositoryBaseTest {
+class SiteRepositoryTest extends RepositoryBaseTest{
 
     @Autowired
-    private SocieteMapper mapper;
+    private SiteMapper mapper;
     @Autowired
-    private SocieteRepository repository;
+    private SiteRepository repository;
 
-    static SocieteDTO dto;
-    Societe entity;
-    Optional<Societe> optionalSociete;
+    static SiteDTO dto;
+    Site entity;
+    Optional<Site> optionalSite;
 
     @BeforeAll
     static void beforeAll(){
-        dto = SocieteDTOTestData.defaultDTO();
+        dto = SiteDTOTestData.defaultDTO();
     }
 
     @BeforeEach
@@ -39,8 +40,8 @@ class SocieteRepositoryTest extends RepositoryBaseTest {
 
     @Test
     void FindByName_thenResult() {
-        optionalSociete = repository.findByName(entity.getName());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByName(entity.getName());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isPresent()
                 .get()
@@ -50,8 +51,8 @@ class SocieteRepositoryTest extends RepositoryBaseTest {
 
     @Test
     void FindByBadName_thenNotFound() {
-        optionalSociete = repository.findByName(UUID.randomUUID().toString());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByName(UUID.randomUUID().toString());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isNotPresent();
     }
@@ -60,16 +61,16 @@ class SocieteRepositoryTest extends RepositoryBaseTest {
     void FindDeleted_thenNotFound() {
         entity.setDeleted(true);
         entity = repository.saveAndFlush(entity);
-        optionalSociete = repository.findByName(entity.getName());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByName(entity.getName());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isNotPresent();
     }
 
     @Test
     void FindByEmail_thenResult() {
-        optionalSociete = repository.findByEmail(entity.getEmail());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByEmail(entity.getEmail());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isPresent()
                 .get()
@@ -79,17 +80,16 @@ class SocieteRepositoryTest extends RepositoryBaseTest {
 
     @Test
     void FindByBadEmail_thenNotFound() {
-        optionalSociete = repository.findByEmail(UUID.randomUUID().toString());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByEmail(UUID.randomUUID().toString());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isNotPresent();
     }
 
-
     @Test
     void FindByPhone_thenResult() {
-        optionalSociete = repository.findByPhone(entity.getPhone());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByPhone(entity.getPhone());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isPresent()
                 .get()
@@ -99,17 +99,16 @@ class SocieteRepositoryTest extends RepositoryBaseTest {
 
     @Test
     void FindByBadPhone_thenNotFound() {
-        optionalSociete = repository.findByPhone(UUID.randomUUID().toString());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByPhone(UUID.randomUUID().toString());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isNotPresent();
     }
 
-
     @Test
-    void findByNameWithIdNotEqual_thenResult() {
-        optionalSociete = repository.findByNameWithIdNotEqual(entity.getName(),UUID.randomUUID());
-        assertThat(optionalSociete)
+    void findByNameWithIdDifferent_thenResult() {
+        optionalSite = repository.findByNameWithIdDifferent(entity.getName(),UUID.randomUUID());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isPresent()
                 .get()
@@ -118,20 +117,17 @@ class SocieteRepositoryTest extends RepositoryBaseTest {
     }
 
     @Test
-    void findByNameWithIdNotEqual_withSameId_shouldReturnNoResult() {
-        optionalSociete = repository.findByNameWithIdNotEqual(entity.getName(),entity.getId());
-        assertThat(optionalSociete)
+    void findByNameWithIdDifferent_withSameId_shouldReturnNoResult() {
+        optionalSite = repository.findByNameWithIdDifferent(entity.getName(),entity.getId());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isNotPresent();
     }
 
-
-
-
     @Test
     void findByPhoneWithIdNotEqual_thenResult() {
-        optionalSociete = repository.findByPhoneWithIdNotEqual(entity.getPhone(),UUID.randomUUID());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByPhoneWithIdNotEqual(entity.getPhone(),UUID.randomUUID());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isPresent()
                 .get()
@@ -141,17 +137,15 @@ class SocieteRepositoryTest extends RepositoryBaseTest {
 
     @Test
     void findByPhoneWithIdNotEqual_withSameId_shouldReturnNoResult() {
-        optionalSociete = repository.findByPhoneWithIdNotEqual(entity.getPhone(),entity.getId());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByPhoneWithIdNotEqual(entity.getPhone(),entity.getId());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isNotPresent();
     }
-
-
     @Test
     void findByEmailWithIdNotEqual_thenResult() {
-        optionalSociete = repository.findByEmailWithIdNotEqual(entity.getEmail(),UUID.randomUUID());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByEmailWithIdNotEqual(entity.getEmail(),UUID.randomUUID());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isPresent()
                 .get()
@@ -161,10 +155,9 @@ class SocieteRepositoryTest extends RepositoryBaseTest {
 
     @Test
     void findByEmailWithIdNotEqual_withSameId_shouldReturnNoResult() {
-        optionalSociete = repository.findByEmailWithIdNotEqual(entity.getEmail(),entity.getId());
-        assertThat(optionalSociete)
+        optionalSite = repository.findByEmailWithIdNotEqual(entity.getEmail(),entity.getId());
+        assertThat(optionalSite)
                 .isNotNull()
                 .isNotPresent();
     }
-
 }

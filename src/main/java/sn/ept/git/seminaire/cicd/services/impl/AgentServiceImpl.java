@@ -49,8 +49,8 @@ public class AgentServiceImpl implements IAgentService {
 
         //todo not found
         final List<Site> sites = siteRepository.findAllById(vm.getIdsSite());
-        Agent item = vmMapper.asEntity(vm);
-        item.setSites(sites.stream().collect(Collectors.toSet()));
+         Agent item = vmMapper.asEntity(vm);
+         item.setSites(sites.stream().collect(Collectors.toSet()));
         return mapper.asDTO(repository.saveAndFlush(item));
     }
 

@@ -1,5 +1,6 @@
 package sn.ept.git.seminaire.cicd.data;
 
+import sn.ept.git.seminaire.cicd.enums.StatusExercice;
 import sn.ept.git.seminaire.cicd.utils.SizeMapping;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
@@ -25,6 +26,9 @@ public class TestData {
         public static final String email=RandomStringUtils.randomAlphanumeric( (SizeMapping.Email.MIN+SizeMapping.Email.MAX)/2).concat("@ept.sn");
         public static final float longitude= RandomUtils.nextFloat();
         public static final float latitude=RandomUtils.nextFloat();
+        public static final Instant start = Instant.now();
+        public static final Instant end = Instant.now();
+        public static final StatusExercice status = StatusExercice.OPEN;
     }
 
 
@@ -42,6 +46,7 @@ public class TestData {
         public static final String email=RandomStringUtils.randomNumeric( (SizeMapping.Email.MIN+SizeMapping.Email.MAX)/2).concat("@sn.sn");
         public static final float longitude= RandomUtils.nextFloat();
         public static final float latitude=RandomUtils.nextFloat();
+        public static final StatusExercice status = StatusExercice.OPEN;
     }
 
 }
