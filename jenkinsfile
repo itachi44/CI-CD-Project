@@ -115,7 +115,7 @@ pipeline {
                  waitUntil{
                  script {
                      echo 'building the project for deployment'
-                     sh "mvn install -DskipTests"
+                     sh "mvn clean install -DskipTests"
                      echo 'deploying on nexus maven-releases'
                      pom = readMavenPom file: "pom.xml";
                      filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
@@ -161,7 +161,7 @@ pipeline {
                waitUntil{
                  script {
                      echo 'building the project for deployment'
-                     sh "mvn install -DskipTests"
+                     sh "mvn clean install -DskipTests"
                      echo 'deploying on tomcat server'
                      pom = readMavenPom file: "pom.xml";
                      filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
@@ -184,7 +184,7 @@ pipeline {
     post {
         always {
             script {
-                sh "mvn clean"
+               // sh "mvn clean"
             }
             emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=true}',
             to: "${EMAIL_TO}",
