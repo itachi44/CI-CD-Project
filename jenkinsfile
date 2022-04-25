@@ -147,7 +147,7 @@ pipeline {
               }
          }
 
-        stage('Deploy for production') {
+        stage('Deploy CANARY REALEASE') {
               when {
                    branch 'REC'
               }
