@@ -158,7 +158,6 @@ pipeline {
               }
              steps {
              timeout(time: 10, unit: 'MINUTES') {
-               waitUntil{
                  script {
                      echo 'building the project for deployment'
                      sh "mvn clean install -DskipTests"
@@ -175,7 +174,6 @@ pipeline {
                          error "*** File: ${artifactPath}, could not be found";
                      }
                      }
-                 }
                  }
               }
          }
