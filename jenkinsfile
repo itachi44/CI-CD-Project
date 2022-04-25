@@ -3,7 +3,7 @@ pipeline {
         label 'linuxAgent'
     }
     environment {
-        EMAIL_TO = 'ngfarimata@ept.sn, dcheikhahmadou@ept.sn, sadjiabdoulaye@ept.sn'
+        EMAIL_TO = 'ngfarimata@ept.sn, dcheikhahmadou@ept.sn'
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
         NEXUS_URL = "44.201.200.73:8081"
