@@ -34,8 +34,6 @@ pipeline {
              //   }
           //  }
        // }
-
-
         stage("Build") {
             steps {
                 script {
@@ -43,14 +41,13 @@ pipeline {
                 }
             }
         }
-
         stage("Run tests") {
-                    steps {
-                        script {
-                            sh "mvn test"
+            steps {
+                script {
+                     sh "mvn test"
                         }
                     }
-        }
+         }
 
         stage('Sonarqube') {
             environment {
@@ -118,7 +115,7 @@ pipeline {
                  waitUntil{
                  script {
                      echo 'building the project for deployment'
-                     sh "mvn install"
+                     sh "mvn install -DskipTests"
                      echo 'deploying on nexus maven-releases'
                      pom = readMavenPom file: "pom.xml";
                      filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
@@ -159,12 +156,12 @@ pipeline {
               when {
                    branch 'REC'
               }
-              steps {
-              timeout(time: 10, unit: 'MINUTES') {
-                waitUntil{
+             steps {
+             timeout(time: 10, unit: 'MINUTES') {
+               waitUntil{
                  script {
                      echo 'building the project for deployment'
-                     sh "mvn install"
+                     sh "mvn install -DskipTests"
                      echo 'deploying on tomcat server'
                      pom = readMavenPom file: "pom.xml";
                      filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
@@ -203,7 +200,7 @@ pipeline {
         failure {
             emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=true}',
             to: "${EMAIL_TO}",
-            subject: '${projectName} build (${sourceBranch}) FAILURE'
+            subject: 'FAILURE'
             //mail bcc: '', body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "foo@foomail.com";
          }
         unstable {
