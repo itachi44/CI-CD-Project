@@ -9,7 +9,7 @@ pipeline {
         NEXUS_URL = "44.201.200.73:8081"
         NEXUS_SNAPSHOT_REPOSITORY = "maven-snapshots"
         NEXUS_RELEASE_REPOSITORY = "maven-releases"
-        NEXUS_CREDENTIAL_ID = "nexus-user-credentials"
+        NEXUS_CREDENTIAL_ID = "admin"
     }
 
     tools {
@@ -69,7 +69,7 @@ pipeline {
               when {
                     branch 'main'
                     }
-                    steps {
+              steps {
                  script {
                      echo 'deploying on nexus maven-snapshots'
                      pom = readMavenPom file: "pom.xml";
@@ -102,18 +102,49 @@ pipeline {
                          error "*** File: ${artifactPath}, could not be found";
                      }
                  }
-                    }
+            }
          }
 
         stage('Deploy for production') {
-                     when {
-                         branch 'production'
+              when {
+                   branch 'REC'
+              }
+              steps {
+                 script {
+                     echo 'building the project for deployment'
+                     sh "mvn install"
+                     echo 'deploying on nexus maven-snapshots'
+                     pom = readMavenPom file: "pom.xml";
+                     filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                     echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                     artifactPath = filesByGlob[0].path;
+                     artifactExists = fileExists artifactPath;
+                     if(artifactExists) {
+                         echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
+                         nexusArtifactUploader(
+                             nexusVersion: NEXUS_VERSION,
+                             protocol: NEXUS_PROTOCOL,
+                             nexusUrl: NEXUS_URL,
+                             groupId: pom.groupId,
+                             version: pom.version,
+                             repository: NEXUS_RELEASE_REPOSITORY,
+                             credentialsId: NEXUS_CREDENTIAL_ID,
+                             artifacts: [
+                                 [artifactId: pom.artifactId,
+                                 classifier: '',
+                                 file: artifactPath,
+                                 type: pom.packaging],
+                                 [artifactId: pom.artifactId,
+                                 classifier: '',
+                                 file: "pom.xml",
+                                 type: "pom"]
+                             ]
+                         );
+                     } else {
+                         error "*** File: ${artifactPath}, could not be found";
                      }
-                     steps {
-                         sh './jenkins/scripts/deploy-for-production.sh'
-                         input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                         sh './jenkins/scripts/kill.sh'
-                     }
+                 }
+              }
          }
 
 
