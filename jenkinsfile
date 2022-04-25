@@ -170,7 +170,7 @@ pipeline {
                      artifactExists = fileExists artifactPath;
                      if(artifactExists) {
                          echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
-                         deploy adapters: [tomcat9(credentialsId: 'tomcat_user', path: '', url: 'http://54.208.159.122:8080')], contextPath: '/TomcatTrackingApp', onFailure: false, war: 'webapp/target/*.war'
+                         deploy adapters: [tomcat9(credentialsId: 'tomcat_user', path: '', url: 'http://54.208.159.122:8080')], contextPath: '/TomcatTrackingApp', onFailure: false, war: '**/*.war'
                      } else {
                          error "*** File: ${artifactPath}, could not be found";
                      }
