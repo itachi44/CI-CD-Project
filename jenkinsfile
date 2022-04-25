@@ -107,7 +107,7 @@ pipeline {
 
         stage('Deploy for production') {
               when {
-                   branch 'REC'
+                   branch 'RELEASE'
               }
               steps {
                  script {
@@ -147,7 +147,29 @@ pipeline {
               }
          }
 
-
+        stage('Deploy for production') {
+              when {
+                   branch 'REC'
+              }
+              steps {
+                 script {
+                     echo 'building the project for deployment'
+                     sh "mvn install"
+                     echo 'deploying on tomcat server'
+                     pom = readMavenPom file: "pom.xml";
+                     filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                     echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                     artifactPath = filesByGlob[0].path;
+                     artifactExists = fileExists artifactPath;
+                     if(artifactExists) {
+                         echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
+                         deploy adapters: [tomcat9(credentialsId: 'tomcat_user', path: '', url: 'http://54.208.159.122:8080')], contextPath: '/TomcatTrackingApp', onFailure: false, war: 'webapp/target/*.war'
+                     } else {
+                         error "*** File: ${artifactPath}, could not be found";
+                     }
+                 }
+              }
+         }
 
     }
     post {
@@ -161,27 +183,27 @@ pipeline {
         }
         success {
             echo 'You are seeing this because the run is successful'
-            emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=true}',
+            emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${projectName} build (${sourceBranch}) \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=true}',
             to: "${EMAIL_TO}",
             subject: 'SUCCESS'
 
          }
         failure {
-            emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=true}',
+            emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${projectName} build (${sourceBranch}) \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=true}',
             to: "${EMAIL_TO}",
             subject: '${projectName} build (${sourceBranch}) FAILURE'
             //mail bcc: '', body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "foo@foomail.com";
          }
         unstable {
             echo 'You are seeing this because the run was marked as unstable'
-            emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=true}',
+            emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${projectName} build (${sourceBranch}) \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=true}',
             to: "${EMAIL_TO}",
             subject: 'UNSTABLE'
          }
         changed {
             echo 'You are seeing this because the Pipeline has changed'
             echo 'The Pipeline was previously failing but is now successful'
-            emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=true}',
+            emailext attachLog: true, body: 'Check console output at $BUILD_URL to view the results. \n\n ${projectName} build (${sourceBranch}) \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=true}',
             to: "${EMAIL_TO}",
             subject: 'Pipeline has changed'
 
